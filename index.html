@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Button Animation Preview</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 22% 28%, rgba(71, 255, 136, 0.2), transparent 24%),
+        radial-gradient(circle at 76% 34%, rgba(88, 169, 255, 0.22), transparent 26%),
+        radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.04), transparent 30%),
+        linear-gradient(180deg, #0c1615 0%, #081018 52%, #05080d 100%);
+      color: #fff;
+    }
+
+    .demo {
+      width: min(100%, 980px);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      align-items: center;
+      gap: 56px;
+      padding: 48px 32px;
+    }
+
+    .button-zone {
+      position: relative;
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+    }
+
+    .border-button-stack {
+      display: grid;
+      justify-items: center;
+      gap: 20px;
+    }
+
+    .button-zone--contact {
+      isolation: isolate;
+    }
+
+    .animated-button {
+      --angle: 0deg;
+
+      position: relative;
+      isolation: isolate;
+      display: inline-grid;
+      place-items: center;
+      min-width: 190px;
+      height: 58px;
+      padding: 0 28px;
+      border: 0;
+      border-radius: 999px;
+      background: #0c120f;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      overflow: hidden;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.18s ease;
+    }
+
+    .animated-button::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      z-index: -2;
+      border-radius: inherit;
+      background:
+        conic-gradient(
+          from var(--angle),
+          transparent 0deg,
+          transparent 250deg,
+          rgba(71, 255, 136, 0.12) 280deg,
+          rgba(71, 255, 136, 0.95) 320deg,
+          #d6ffe4 340deg,
+          rgba(71, 255, 136, 0.15) 355deg,
+          transparent 360deg
+        );
+      filter: drop-shadow(0 0 7px rgba(71, 255, 136, 0.65));
+    }
+
+    .animated-button::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      z-index: -1;
+      border-radius: inherit;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+        #0c120f;
+    }
+
+    .animated-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .animated-button:focus-visible {
+      outline: 3px solid rgba(71, 255, 136, 0.42);
+      outline-offset: 5px;
+    }
+
+    .animated-button__label {
+      position: relative;
+      z-index: 2;
+    }
+
+    .animated-button--back {
+      min-width: 140px;
+    }
+
+    .animated-button--back .animated-button__label::before {
+      content: "\2190";
+      display: inline-block;
+      margin-right: 9px;
+    }
+
+    .energy-glow {
+      position: absolute;
+      left: 50%;
+      top: 61%;
+      width: 210px;
+      height: 86px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(45, 142, 255, 0.92),
+        rgba(45, 142, 255, 0.32) 38%,
+        rgba(45, 142, 255, 0) 72%
+      );
+      filter: blur(22px);
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .contact-button {
+      --ring: #163e71;
+
+      position: relative;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 172px;
+      height: 172px;
+      border-radius: 50%;
+      border: 2px solid var(--ring);
+      background:
+        radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.05), transparent 42%),
+        #0a111b;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.025),
+        0 18px 60px rgba(0, 0, 0, 0.34);
+      transition: transform 0.18s ease;
+    }
+
+    .contact-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .contact-button:focus-visible {
+      outline: 4px solid rgba(87, 170, 255, 0.5);
+      outline-offset: 8px;
+    }
+
+    .contact-button__label {
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 760px) {
+      .demo {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 32px 20px 40px;
+      }
+
+      .button-zone {
+        min-height: 240px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animated-button::before {
+        filter: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="demo" aria-label="Combined animation preview">
+    <section class="button-zone" aria-label="Animated button border preview">
+      <div class="border-button-stack">
+        <button class="animated-button" type="button" data-border-button>
+          <span class="animated-button__label">Request Quote</span>
+        </button>
+
+        <button class="animated-button animated-button--back" type="button" data-border-button>
+          <span class="animated-button__label">Back</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="button-zone button-zone--contact" aria-label="Contact button preview">
+      <div class="energy-glow" aria-hidden="true"></div>
+      <button class="contact-button" type="button" aria-label="Contact us">
+        <span class="contact-button__label">Contact</span>
+      </button>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script>
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const borderButtons = document.querySelectorAll("[data-border-button]");
+    const contactButton = document.querySelector(".contact-button");
+    const glow = document.querySelector(".energy-glow");
+    const idleDark = "#163e71";
+    const idleLight = "#5eb5ff";
+    const activeBlue = "#3a97ff";
+    let hoverActive = false;
+    let pressActive = false;
+
+    borderButtons.forEach((button) => {
+      const label = button.querySelector(".animated-button__label");
+      const state = { angle: 0 };
+
+      const spin = gsap.to(state, {
+        angle: 360,
+        duration: 2.4,
+        ease: "none",
+        repeat: -1,
+        onUpdate: () => {
+          button.style.setProperty("--angle", state.angle + "deg");
+        }
+      });
+
+      const pulse = gsap.to(label, {
+        color: "#47ff88",
+        duration: 1.2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true
+      });
+
+      if (prefersReducedMotion) {
+        spin.pause();
+        pulse.pause();
+        button.style.setProperty("--angle", "320deg");
+        gsap.set(label, { color: "#47ff88" });
+      }
+    });
+
+    const contactIdle = gsap.timeline({
+      repeat: -1,
+      yoyo: true,
+      defaults: { ease: "sine.inOut" }
+    });
+
+    contactIdle
+      .to(contactButton, { "--ring": idleLight, duration: 1.35 })
+      .to(contactButton, { "--ring": idleDark, duration: 1.35 });
+
+    function showActiveContactState() {
+      contactIdle.pause();
+      gsap.set(contactButton, { "--ring": activeBlue });
+      gsap.fromTo(
+        glow,
+        { opacity: 0, scale: 0.78, y: 8 },
+        {
+          opacity: 0.92,
+          scale: 1.08,
+          y: 0,
+          duration: 0.22,
+          ease: "power2.out",
+          overwrite: true
+        }
+      );
+    }
+
+    function showIdleContactState() {
+      gsap.killTweensOf(glow);
+      gsap.set(glow, { opacity: 0, scale: 1, y: 0 });
+      gsap.set(contactButton, { "--ring": idleDark });
+
+      if (!prefersReducedMotion) {
+        contactIdle.restart(true);
+      }
+    }
+
+    function syncContactState() {
+      if (prefersReducedMotion) {
+        return;
+      }
+
+      if (hoverActive || pressActive) {
+        showActiveContactState();
+      } else {
+        showIdleContactState();
+      }
+    }
+
+    contactButton.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") {
+        hoverActive = true;
+        syncContactState();
+      }
+    });
+
+    contactButton.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "mouse") {
+        hoverActive = false;
+        syncContactState();
+      }
+    });
+
+    contactButton.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "mouse") {
+        contactButton.setPointerCapture(event.pointerId);
+        pressActive = true;
+        syncContactState();
+      }
+    });
+
+    contactButton.addEventListener("pointerup", (event) => {
+      if (event.pointerType !== "mouse") {
+        if (contactButton.hasPointerCapture(event.pointerId)) {
+          contactButton.releasePointerCapture(event.pointerId);
+        }
+        pressActive = false;
+        syncContactState();
+      }
+    });
+
+    contactButton.addEventListener("pointercancel", (event) => {
+      if (contactButton.hasPointerCapture(event.pointerId)) {
+        contactButton.releasePointerCapture(event.pointerId);
+      }
+      pressActive = false;
+      syncContactState();
+    });
+
+    contactButton.addEventListener("lostpointercapture", () => {
+      pressActive = false;
+      syncContactState();
+    });
+
+    if (prefersReducedMotion) {
+      contactIdle.pause();
+      gsap.set(contactButton, { "--ring": activeBlue });
+    }
+  </script>
+</body>
+</html>
